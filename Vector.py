@@ -1,3 +1,4 @@
+import math 
 class Vector(object):
     def __init__(self,coordinates):
         try:
@@ -33,18 +34,27 @@ class Vector(object):
         return coordinates
     
     def scal_mul(self,s):
+        coordinates=[]
+        for i in self.coordinates:
+            i=i*s
+            coordinates.append(i)
+        return coordinates
+    def magnitude(self):
+        mag = 0
+        for i in self.coordinates:
+            i=i*i
+            mag =mag+i
+        return math.sqrt(mag)
+    
+    def magnitude1(self):
+        mag = 0
+        coordinate_squre=[i*i for i in self.coordinates]
+        return math.sqrt(sum(coordinate_squre))
+    
+    def normalize(self):
         try:
-            if  not s:
-                raise AttributeError
-            if not str(type(s))=="<class 'int'>"
-            coordinates=[]
-            for i in self.coordinates:
-                i=i*s
-                coordinates.append(i)
-            return coordinates
-  
-            
-            
-            
-        
+            recip = 1/self.magnitude()
+            return Vector([self.scal_mul(recip)])
+        except ZeroDivisionError:
+            raise Exception("Can not Normalize Zero Vector")
     
