@@ -19,7 +19,9 @@ class Vector(object):
         except TypeError:
             raise TypeError('The coordinates must be itterable')
     def __str__(self):
-        return 'Vector:{}'.format(self,coordinates)
+        return 'Vector:{}'.format(self.coordinates)
+    def __repr__(self):
+        return 'Vector:{}'.format(self.coordinates)
     def __eq__(self,v):
         return self.coordinates == v.coordinates
     def add (self,v):
@@ -84,7 +86,7 @@ class Vector(object):
     def dot_product2(self,v):
         self.mul = [x*y for x,y in zip(self.coordinates,v.coordinates)]
         return sum(self.mul)
-    #-----------------angle functionn is giving wrong answer-------------
+    
     def angle_rad(self,v):
         norm = self.normalize()
         angle = 1/ math.cos(norm.dot_product2(v))
@@ -122,15 +124,59 @@ class Vector(object):
             return "True"
         else:
              return "False"
-        
-        
-        
-v1 = Vector([-7.579,-7.88])
-v2 = Vector([22.737,23.64])
-print (v2.is_parallel_to(v1))
-print (v2.is_orthogonal(v1))
+    def par_comp(self,v):
+        u1 = self.dot_product( v.normalize())
+        return Vector(v.normalize().scal_mul(u1))
+    def orth_comp(self,v):
+        return self.sub(self.par_comp(v))
 
-
-        
-       
     
+    def cross(self,v):
+        try:
+            x1,y1,z1 = self.coordinates
+            x2,y2,z2 = v.coordinates
+            return Vector([y1*z2- y2*z1,-(x1*z2-x2*z1),x1*y2-x2*y1])
+        except ValueError as e :
+                error =  str(e)
+                if error == "need more than 2 values to unpack" or error == 'not enough values to unpack (expected 3, got 2)':
+                    self_pad_with_zero = Vector(self.coordinates+('0',))
+                    v_pad_with_zero = Vector(v.coordinates+('0',))
+                    return self_pad_with_zero.cross(v_pad_with_zero)
+                elif(error =='too many values to unpack'
+                     or error == 'need more than 1 value to unpack'
+                     or error == "too many values to unpack (expected 3)"):
+                    
+                    print ( "Cross Product is limited to 3 dimension but given more than 3")
+                else:
+                    print (error)
+                
+    def area_parallelogram(self,v):
+        u1 = self.cross(v)
+        return u1.magnitude()
+    
+    def area_tringle(self,v):
+        u1 = self.cross(v)
+        return u1.magnitude()/2
+    
+v1 = Vector([8.462,7.893,-8.187])
+v2 = Vector([6.984,-5.975,4.778])
+v1.cross(v2)
+v1 = Vector([-8.987,-9.838,5.031])
+v2 = Vector([-4.268,-1.861,-8.866])
+v1.area_parallelogram(v2)
+v1 = Vector([1.5,9.547,3.691])
+v2=Vector([-6.007,0.124,5.772])
+v1.area_tringle(v2)
+   
+
+ # v1=  Vector([3.039,1.879])
+# v2=  Vector([0.825,2.036])
+# v1. par_comp(v2)
+# v1= Vector([-9.88,-3.264,-8.159])
+# v2= Vector([-2.155,-9.353,-9.473])
+# v1.orth_comp(v2)
+# v1= Vector([3.009,-6.172,3.692,-2.51])
+# v2= Vector([6.404,-9.144,2.759,8.718])
+# v1. par_comp(v2)
+#v1.orth_comp(v2)
+
