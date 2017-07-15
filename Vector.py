@@ -1,14 +1,14 @@
 import math 
-#from decimal import Decimal,getcontext
-#getcontext().prec = 30
+from decimal import Decimal,getcontext
+getcontext().prec = 30
 class Vector(object):
     def __init__(self,coordinates):
         try:
             if not coordinates:
                 raise ValueError
                 #if coordinates is not passed then it will rise Value Error 
-            self.coordinates = tuple(coordinates)
-            #self.coordinates = tuple([Decimal(x)for x in coordinates])
+            #self.coordinates = tuple(coordinates)
+            self.coordinates = tuple([Decimal(x)for x in coordinates])
             #Outside Class :-Vector.coordinates will give print vectors in tuple form
             #Inside Class :- self.coordinates will print vectors in tuple form
             self.dimension = len(coordinates)
@@ -48,34 +48,34 @@ class Vector(object):
     def scal_mul(self,s):
         coordinates=[]
         for i in self.coordinates:
-            #i=i*Decimal(s)
-            i=i*s
+            i=i*Decimal(s)
+            #i=i*s
             coordinates.append(i)
         return coordinates
     def magnitude(self):
-        mag = 0
+        mag = Decimal('0')
         for i in self.coordinates:
-            i=i*i
-            mag =abs(mag+i)
-        return math.sqrt(mag)
+            i=Decimal(i)*Decimal(i)
+            mag =mag+i
+        return Decimal( math.sqrt(mag))
     
     def magnitude1(self):
         mag = 0
         coordinate_squre=[i*i for i in self.coordinates]
         return math.sqrt(sum(coordinate_squre))
     
-#     def normalize(self):
-#         try:
-#             recip = Decimal(1)/self.magnitude()
-#             return Vector(self.scal_mul(recip))
-#         except ZeroDivisionError:
-#             raise Exception("Can not Normalize Zero Vector")
     def normalize(self):
         try:
-            recip = 1/self.magnitude()
-            return Vector( self.scal_mul(recip))
+            recip = Decimal(1)/self.magnitude()
+            return Vector(self.scal_mul(recip))
         except ZeroDivisionError:
             raise Exception("Can not Normalize Zero Vector")
+#     def normalize(self):
+#         try:
+#             recip = 1/self.magnitude()
+#             return Vector( self.scal_mul(recip))
+#         except ZeroDivisionError:
+#             raise Exception("Can not Normalize Zero Vector")
             
             
             
@@ -120,10 +120,7 @@ class Vector(object):
         return self.magnitude() < tolerance
     
     def is_parallel_to(self, v):
-        if self.is_zero() or v.is_zero():
-            return "True"
-        else:
-             return "False"
+        return (self.is_zero() or v.is_zero() or self.angle(v)==0 or self.angle(v)==math.pi)
     def par_comp(self,v):
         u1 = self.dot_product( v.normalize())
         return Vector(v.normalize().scal_mul(u1))
@@ -158,15 +155,16 @@ class Vector(object):
         u1 = self.cross(v)
         return u1.magnitude()/2
     
-v1 = Vector([8.462,7.893,-8.187])
-v2 = Vector([6.984,-5.975,4.778])
-v1.cross(v2)
-v1 = Vector([-8.987,-9.838,5.031])
-v2 = Vector([-4.268,-1.861,-8.866])
-v1.area_parallelogram(v2)
-v1 = Vector([1.5,9.547,3.691])
-v2=Vector([-6.007,0.124,5.772])
-v1.area_tringle(v2)
+# v1 = Vector(['-7.579','-7.88'])
+# v2 = Vector(['22.737','23.64'])
+# print(v1.is_parallel_to(v2))
+# v1.cross(v2)
+# v1 = Vector([-8.987,-9.838,5.031])
+# v2 = Vector([-4.268,-1.861,-8.866])
+# v1.area_parallelogram(v2)
+# v1 = Vector([1.5,9.547,3.691])
+# v2=Vector([-6.007,0.124,5.772])
+# v1.area_tringle(v2)
    
 
  # v1=  Vector([3.039,1.879])
